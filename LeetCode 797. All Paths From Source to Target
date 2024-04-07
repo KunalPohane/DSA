@@ -1,0 +1,29 @@
+import java.util.*;
+
+class Solution {
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        curr.add(0); // Add the source node to the current path
+
+        int destination =   graph.length - 1; //Last node of the graph ofc
+        dfs(0, graph, curr,destination, ans);
+        return ans;
+    }
+
+    public void dfs(int src, int[][] graph, List<Integer> curr, int destination, List<List<Integer>> ans) {
+        if (src == destination) {
+            ans.add(new ArrayList<>(curr));
+            return;
+        }
+
+
+        for (int i = 0 ; i< graph[src].length ;i++ ) {
+
+            curr.add(graph[src][i]);
+            dfs(graph[src][i], graph, curr, destination, ans);
+            curr.remove(curr.size() - 1);
+
+        }
+    }
+}
