@@ -1,0 +1,105 @@
+class Pair{
+    
+    
+    int parentvalue ;
+    int weightvalue;
+    
+    
+    Pair(int parentvalue , int weightvalue){
+        
+        this.parentvalue = parentvalue;
+        this.weightvalue = weightvalue;
+        
+    }
+    
+    
+}
+
+class Solution{
+	static int spanningTree(int V, int E, int edges[][]){
+	    // Code Here. 
+	    
+	    //Edges are given hence [Parent , Adjacent , Weight]
+	    
+	   // Lets make Adjacency List
+	   
+	  ArrayList<ArrayList<ArrayList<Integer>>> adjacencyList = new ArrayList<>(); //[]
+	  
+	  
+	  for(int i = 0 ;i < V ; i++){
+	      
+	      adjacencyList.add(new ArrayList<ArrayList<Integer>>()); //[[],[],[]...]
+	      
+	  }
+	   
+	   for(int i = 0 ; i<E; i++){
+	       
+	       
+	       int parentvalue = edges[i][0];
+	       int adjvalue = edges[i][1];
+	       int weight_btw_them = edges[i][2];
+	       
+	   ArrayList<Integer> parentlist_with_weights = new ArrayList<>();
+	   ArrayList<Integer> adjacent_with_weights = new ArrayList<>();
+	  
+	  parentlist_with_weights.add(parentvalue);
+	  parentlist_with_weights.add(weight_btw_them);
+	   
+	   
+	  adjacent_with_weights.add(adjvalue);
+	  adjacent_with_weights.add(weight_btw_them);
+	  
+	  
+	   adjacencyList.get(adjvalue).add(parentlist_with_weights); //[[ [u,w] ],[ [] ],[ [v,w] ]...]
+	   adjacencyList.get(parentvalue).add(adjacent_with_weights);
+	  
+	  
+	  
+	   }
+	   
+	  
+	   PriorityQueue<Pair> pq = 
+	   new PriorityQueue<Pair>((pair1 , pair2) -> pair1.weightvalue -  pair2.weightvalue);
+	   
+	   boolean[] visited = new boolean[V];
+	     pq.add(new Pair(0,0));
+	   int sum = 0 ;
+	   
+	   while(!pq.isEmpty()){
+	       
+	       int wt = pq.peek().weightvalue;
+	       int node = pq.peek().parentvalue;
+	       
+	       pq.remove();
+	       
+	       if(visited[node]){
+	           
+	           continue;
+	           
+	       }
+	       
+	      
+	       visited[node] = true;
+	       sum += wt ;
+	       
+	       //System.out.println(node + "-->");
+	       
+	       
+	       for(int i = 0 ; i <adjacencyList.get(node).size();i++){
+	           
+	           int adjnode = adjacencyList.get(node).get(i).get(0);
+	           int adjnodeweight = adjacencyList.get(node).get(i).get(1);
+	           
+	           if(!visited[adjnode]){
+	               
+	               pq.add(new Pair(adjnode, adjnodeweight));
+	               
+	           }
+	       }
+	   }
+	   
+	   
+	    return sum;
+	    
+	}
+}
